@@ -1,4 +1,7 @@
 # MarchingCubes
+
+*参考论文：Lorensen W E ,  Cline H E . Marching cubes: A high resolution 3D surface construction algorithm*
+
 这个项目简单实现了MarchingCubes的基础思想：构建立方体，通过立方体八个角的数值来确定给定等值面在立方体内形成的三角面。
 
 项目的主要思路为：
