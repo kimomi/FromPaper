@@ -1,4 +1,6 @@
-﻿namespace PerlinNoise
+﻿using System;
+
+namespace PerlinNoise
 {
     using BumpKit;
     using System.Drawing;
@@ -42,6 +44,32 @@
 
         static void Main(string[] args)
         {
+            // 第一种噪声（随机噪声）
+            var image = GetImage((x, y) => (PerlinNoise.GetNoise1(x, y)  + 1) / 2);
+            image.Save("getnoise1.jpg");
+            
+            // 第二种噪声（连续随机噪声）
+            var image2 = GetImage((x, y) => (PerlinNoise.GetNoise2(x, y)  + 1) / 2);
+            image2.Save("getnoise2.jpg");
+            
+            // 第三种噪声（平滑连续随机噪声）
+            var image3 = GetImage((x, y) => (PerlinNoise.GetNoise3(x, y)  + 1) / 2);
+            image3.Save("getnoise3.jpg");
+            
+            // 第四种噪声（Perlin Noise伪）
+            var image4 = GetImage((x, y) => (PerlinNoise.GetNoise4(x, y)  + 1) / 2);
+            image4.Save("getnoise4.jpg");
+            
+            // 第五种噪声（Perlin Noise）
+            var image5 = GetImage((x, y) => (PerlinNoise.Noise(x, y, 0)  + 1) / 2);
+            image5.Save("getnoise5.jpg");
+            
+            // 做一个perlin noise 的动图
+            WriteGif();
+        }
+
+        static void WriteGif()
+        {
             using (FileStream fs = new FileStream("result.gif", FileMode.Create))
             {
                 using (var encoder = new GifEncoder(fs))
@@ -57,9 +85,9 @@
             }
         }
 
-        static Image GetImage(float movex)
+        static Image GetImage(float z)
         {
-            var len = 1024;
+            var len = 512;
             var image = new Bitmap(len, len);
 
             for (var i = 0; i < len; i++)
@@ -68,7 +96,25 @@
                 {
                     var x = i / (float)len * 6;
                     var y = j / (float)len * 6;
-                    image.SetPixel(i, j, MarblePerLin(x, y, movex));
+                    image.SetPixel(i, j, MarblePerLin(x, y, z));
+                }
+            }
+
+            return image;
+        }
+        
+        static Image GetImage(Func<float, float, float> getNoiseFunc)
+        {
+            var len = 256;
+            var image = new Bitmap(len, len);
+
+            for (var i = 0; i < len; i++)
+            {
+                for (var j = 0; j < len; j++)
+                {
+                    var x = i / (float)len * 6;
+                    var y = j / (float)len * 6;
+                    image.SetPixel(i, j,  PerlinNoise.Lerp(Color.Black, Color.White, getNoiseFunc(x, y)));
                 }
             }
 

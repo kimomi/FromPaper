@@ -120,5 +120,84 @@ namespace PerlinNoise
         { 
             return (Noise(x, y, z) + 1) / 2;
         }
+
+        public static float GetNoise1(float x, float y)
+        {
+            var floorx = MathF.Floor(x);
+            var floorxPlus1 = floorx + 1;
+            var floory = MathF.Floor(y);
+            var flooryPlus1 = floory + 1;
+            var r = new System.Random();
+            float p0 = (float)r.NextDouble() * 2 - 1;
+            float p1 = (float)r.NextDouble() * 2 - 1;
+            float p2 = (float)r.NextDouble() * 2 - 1;
+            float p3 = (float)r.NextDouble() * 2 - 1;
+            
+            var l1 = Lerp(p0, p1, x - floorx);
+            var l2 = Lerp(p2, p3, x - floorx);
+            return Lerp(l1, l2, y - floory);
+        }
+        
+        public static float GetNoise2(float x, float y)
+        {
+            int floorx = (int)MathF.Floor(x);
+            int floorxPlus1 = floorx + 1;
+            int floory = (int)MathF.Floor(y);
+            int flooryPlus1 = floory + 1;
+            float p0 = (float)(new System.Random(floorx * 17 + floory * 99).NextDouble() * 2 - 1);
+            float p1 = (float)(new System.Random(floorxPlus1 * 17 + floory * 99).NextDouble() * 2 - 1);
+            float p2 = (float)(new System.Random(floorx * 17 + flooryPlus1 * 99).NextDouble() * 2 - 1);
+            float p3 = (float)(new System.Random(floorxPlus1 * 17 + flooryPlus1 * 99).NextDouble() * 2 - 1);
+            
+            var l1 = Lerp(p0, p1, x - floorx);
+            var l2 = Lerp(p2, p3, x - floorx);
+            return Lerp(l1, l2, y - floory);
+        }
+
+        public static float GetNoise3(float x, float y)
+        {
+            int floorx = (int)MathF.Floor(x);
+            int floorxPlus1 = floorx + 1;
+            int floory = (int)MathF.Floor(y);
+            int flooryPlus1 = floory + 1;
+            
+            float p0 = (float)(new System.Random(floorx * 17 + floory * 97).NextDouble() * 2 - 1);
+            float p1 = (float)(new System.Random(floorxPlus1 * 17 + floory * 97).NextDouble() * 2 - 1);
+            float p2 = (float)(new System.Random(floorx * 17 + flooryPlus1 * 97).NextDouble() * 2 - 1);
+            float p3 = (float)(new System.Random(floorxPlus1 * 17 + flooryPlus1 * 97).NextDouble() * 2 - 1);
+            
+            var l1 = Lerp(p0, p1, Fade(x - floorx));
+            var l2 = Lerp(p2, p3, Fade(x - floorx));
+            return Lerp(l1, l2, Fade(y - floory));
+        }
+        
+        public static float GetNoise4(float x, float y)
+        {
+            int floorx = (int)MathF.Floor(x);
+            int floorxPlus1 = floorx + 1;
+            int floory = (int)MathF.Floor(y);
+            int flooryPlus1 = floory + 1;
+
+            float p0 = (float)(new System.Random(floorx * 17 + floory * 97).NextDouble() * 2 - 1);
+            float p0x = MathF.Sin(p0);
+            float p0y = MathF.Cos(p0);
+            float p0Result = p0x * (floorx - x) + p0y * (floory - y); 
+            float p1 = (float)(new System.Random(floorxPlus1 * 17 + floory * 97).NextDouble() * 2 - 1);
+            float p1x = MathF.Sin(p1);
+            float p1y = MathF.Cos(p1);
+            float p1Result = p1x * (floorxPlus1 - x) + p1y * (floory - y); 
+            float p2 = (float)(new System.Random(floorx * 17 + flooryPlus1 * 97).NextDouble() * 2 - 1);
+            float p2x = MathF.Sin(p2);
+            float p2y = MathF.Cos(p2);
+            float p2Result = p2x * (floorx - x) + p2y * (flooryPlus1 - y); 
+            float p3 = (float)(new System.Random(floorxPlus1 * 17 + flooryPlus1 * 97).NextDouble() * 2 - 1);
+            float p3x = MathF.Sin(p3);
+            float p3y = MathF.Cos(p3);
+            float p3Result = p3x * (floorxPlus1 - x) + p3y * (flooryPlus1 - y); 
+            
+            var l1 = Lerp(p0Result, p1Result, Fade(x - floorx));
+            var l2 = Lerp(p2Result, p3Result, Fade(x - floorx));
+            return Lerp(l1, l2, Fade(y - floory));
+        }
     }
 }

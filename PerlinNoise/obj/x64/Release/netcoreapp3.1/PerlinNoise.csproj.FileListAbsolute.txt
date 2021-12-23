@@ -17,4 +17,4 @@ D:\Develop\Project\FromPaper\PerlinNoise\obj\x64\Release\netcoreapp3.1\PerlinNoi
 D:\Develop\Project\FromPaper\PerlinNoise\obj\x64\Release\netcoreapp3.1\PerlinNoise.dll
 D:\Develop\Project\FromPaper\PerlinNoise\obj\x64\Release\netcoreapp3.1\PerlinNoise.pdb
 D:\Develop\Project\FromPaper\PerlinNoise\obj\x64\Release\netcoreapp3.1\PerlinNoise.genruntimeconfig.cache
-D:\Develop\Project\FromPaper\PerlinNoise\obj\x64\Release\netcoreapp3.1\PerlinNoise.csprojAssemblyReference.cache
+D:\Develop\Project\FromPaper\PerlinNoise\obj\x64\Release\netcoreapp3.1\PerlinNoise.csproj.AssemblyReference.cache
