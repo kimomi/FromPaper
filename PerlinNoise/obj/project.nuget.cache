@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "xCvsA6lPhq3ldAvURlaPhENveQt/LfUoHfBgZVi4XENoi2ee6O+U1Q86WmGZIsfr5JXrYnbfruVxekGQ4i8PBQ==",
+  "success": true,
+  "projectFilePath": "D:\\Develop\\Project\\FromPaper\\PerlinNoise\\PerlinNoise.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\YH-10100\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\YH-10100\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\YH-10100\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.18\\microsoft.netcore.app.host.win-x64.3.1.18.nupkg.sha512"
+  ],
+  "logs": []
+}
