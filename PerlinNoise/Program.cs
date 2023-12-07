@@ -44,26 +44,38 @@ namespace PerlinNoise
 
         static void Main(string[] args)
         {
+            var coordImge = GetImage((x, y) => {
+                if (MathF.Abs(x - MathF.Floor(x)) < 0.05f || MathF.Abs(y - MathF.Floor(y)) < 0.05f)
+                {
+                    return 0.0f;
+                }
+                else
+                {
+                    return 1.0f;
+                }
+            });
+            coordImge.Save("coordImge.jpg");
+
             // 第一种噪声（随机噪声）
-            var image = GetImage((x, y) => (PerlinNoise.GetNoise1(x, y)  + 1) / 2);
+            var image = GetImage((x, y) => PerlinNoise.GetNoise1(x, y));
             image.Save("getnoise1.jpg");
-            
+
             // 第二种噪声（连续随机噪声）
-            var image2 = GetImage((x, y) => (PerlinNoise.GetNoise2(x, y)  + 1) / 2);
+            var image2 = GetImage((x, y) => PerlinNoise.GetNoise2(x, y));
             image2.Save("getnoise2.jpg");
-            
+
             // 第三种噪声（平滑连续随机噪声）
-            var image3 = GetImage((x, y) => (PerlinNoise.GetNoise3(x, y)  + 1) / 2);
+            var image3 = GetImage((x, y) => PerlinNoise.GetNoise3(x, y));
             image3.Save("getnoise3.jpg");
-            
+
             // 第四种噪声（Perlin Noise伪）
-            var image4 = GetImage((x, y) => (PerlinNoise.GetNoise4(x, y)  + 1) / 2);
+            var image4 = GetImage((x, y) => PerlinNoise.GetNoise4(x, y));
             image4.Save("getnoise4.jpg");
-            
+
             // 第五种噪声（Perlin Noise）
             var image5 = GetImage((x, y) => (PerlinNoise.Noise(x, y, 0)  + 1) / 2);
             image5.Save("getnoise5.jpg");
-            
+
             // 做一个perlin noise 的动图
             WriteGif();
         }
@@ -112,8 +124,8 @@ namespace PerlinNoise
             {
                 for (var j = 0; j < len; j++)
                 {
-                    var x = i / (float)len * 6;
-                    var y = j / (float)len * 6;
+                    var x = i / (float)len * 6 + 0.5f;
+                    var y = j / (float)len * 6 + 0.5f;
                     image.SetPixel(i, j,  PerlinNoise.Lerp(Color.Black, Color.White, getNoiseFunc(x, y)));
                 }
             }

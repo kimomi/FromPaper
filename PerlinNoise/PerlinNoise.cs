@@ -127,11 +127,12 @@ namespace PerlinNoise
             var floorxPlus1 = floorx + 1;
             var floory = MathF.Floor(y);
             var flooryPlus1 = floory + 1;
-            var r = new System.Random();
-            float p0 = (float)r.NextDouble() * 2 - 1;
-            float p1 = (float)r.NextDouble() * 2 - 1;
-            float p2 = (float)r.NextDouble() * 2 - 1;
-            float p3 = (float)r.NextDouble() * 2 - 1;
+
+            // 纯随机
+            float p0 = RandomValue();
+            float p1 = RandomValue();
+            float p2 = RandomValue();
+            float p3 = RandomValue();
             
             var l1 = Lerp(p0, p1, x - floorx);
             var l2 = Lerp(p2, p3, x - floorx);
@@ -144,10 +145,10 @@ namespace PerlinNoise
             int floorxPlus1 = floorx + 1;
             int floory = (int)MathF.Floor(y);
             int flooryPlus1 = floory + 1;
-            float p0 = (float)(new System.Random(floorx * 17 + floory * 99).NextDouble() * 2 - 1);
-            float p1 = (float)(new System.Random(floorxPlus1 * 17 + floory * 99).NextDouble() * 2 - 1);
-            float p2 = (float)(new System.Random(floorx * 17 + flooryPlus1 * 99).NextDouble() * 2 - 1);
-            float p3 = (float)(new System.Random(floorxPlus1 * 17 + flooryPlus1 * 99).NextDouble() * 2 - 1);
+            float p0 = Hash(floorx, floory);
+            float p1 = Hash(floorxPlus1, floory);
+            float p2 = Hash(floorx, flooryPlus1);
+            float p3 = Hash(floorxPlus1, flooryPlus1);
             
             var l1 = Lerp(p0, p1, x - floorx);
             var l2 = Lerp(p2, p3, x - floorx);
@@ -160,12 +161,12 @@ namespace PerlinNoise
             int floorxPlus1 = floorx + 1;
             int floory = (int)MathF.Floor(y);
             int flooryPlus1 = floory + 1;
-            
-            float p0 = (float)(new System.Random(floorx * 17 + floory * 97).NextDouble() * 2 - 1);
-            float p1 = (float)(new System.Random(floorxPlus1 * 17 + floory * 97).NextDouble() * 2 - 1);
-            float p2 = (float)(new System.Random(floorx * 17 + flooryPlus1 * 97).NextDouble() * 2 - 1);
-            float p3 = (float)(new System.Random(floorxPlus1 * 17 + flooryPlus1 * 97).NextDouble() * 2 - 1);
-            
+
+            float p0 = Hash(floorx, floory);
+            float p1 = Hash(floorxPlus1, floory);
+            float p2 = Hash(floorx, flooryPlus1);
+            float p3 = Hash(floorxPlus1, flooryPlus1);
+
             var l1 = Lerp(p0, p1, Fade(x - floorx));
             var l2 = Lerp(p2, p3, Fade(x - floorx));
             return Lerp(l1, l2, Fade(y - floory));
@@ -178,26 +179,47 @@ namespace PerlinNoise
             int floory = (int)MathF.Floor(y);
             int flooryPlus1 = floory + 1;
 
-            float p0 = (float)(new System.Random(floorx * 17 + floory * 97).NextDouble() * 2 - 1);
-            float p0x = MathF.Sin(p0);
-            float p0y = MathF.Cos(p0);
-            float p0Result = p0x * (floorx - x) + p0y * (floory - y); 
-            float p1 = (float)(new System.Random(floorxPlus1 * 17 + floory * 97).NextDouble() * 2 - 1);
-            float p1x = MathF.Sin(p1);
-            float p1y = MathF.Cos(p1);
-            float p1Result = p1x * (floorxPlus1 - x) + p1y * (floory - y); 
-            float p2 = (float)(new System.Random(floorx * 17 + flooryPlus1 * 97).NextDouble() * 2 - 1);
-            float p2x = MathF.Sin(p2);
-            float p2y = MathF.Cos(p2);
-            float p2Result = p2x * (floorx - x) + p2y * (flooryPlus1 - y); 
-            float p3 = (float)(new System.Random(floorxPlus1 * 17 + flooryPlus1 * 97).NextDouble() * 2 - 1);
-            float p3x = MathF.Sin(p3);
-            float p3y = MathF.Cos(p3);
-            float p3Result = p3x * (floorxPlus1 - x) + p3y * (flooryPlus1 - y); 
+            var p0 = HashGradient(floorx, floory);
+            var p1 = HashGradient(floorxPlus1, floory);
+            var p2 = HashGradient(floorx, flooryPlus1);
+            var p3 = HashGradient(floorxPlus1, flooryPlus1);
+
+            float p0Result = Dot(p0, (x - floorx, y - floory));
+            float p1Result = Dot(p1, (x - floorxPlus1, y - floory));
+            float p2Result = Dot(p2, (x - floorx, y - flooryPlus1));
+            float p3Result = Dot(p3, (x - floorxPlus1, y - flooryPlus1));
             
             var l1 = Lerp(p0Result, p1Result, Fade(x - floorx));
             var l2 = Lerp(p2Result, p3Result, Fade(x - floorx));
-            return Lerp(l1, l2, Fade(y - floory));
+            return (Lerp(l1, l2, Fade(y - floory)) + 1.0f) * 0.5f; // dot 得到的范围为 [-1, 1]
+        }
+
+        public static float Hash(float x, float y)
+        {
+            return Hash(Hash(x) + 57.31f * Hash(y));
+        }
+
+        public static float Hash(float x)
+        {
+            var a = MathF.Sin(x) * 43578.7263f;
+            return a - MathF.Floor(a);
+        }
+
+        private static Random rand = new Random(1);
+        public static float RandomValue()
+        {
+            return (float)rand.NextDouble();
+        }
+
+        public static float Dot((float, float) a, (float, float) b)
+        { 
+            return a.Item1 * b.Item2 + a.Item2 * b.Item1;
+        }
+
+        public static (float, float) HashGradient(float x, float y)
+        {
+            var angle = (float)(Hash(x, y) * 2f * Math.PI);
+            return (MathF.Sin(angle), MathF.Cos(angle));
         }
     }
 }
